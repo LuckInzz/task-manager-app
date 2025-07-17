@@ -2,20 +2,39 @@ package com.tasks.backend.entity;
 
 import java.time.LocalDateTime;
 
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "task")
+@Table(name = "tasks")
 public class Task {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
+    @Column(name = "task_name", nullable = false, length = 100)
     private String taskName;
+
+    @Column(columnDefinition = "TEXT")
     private String description;
+
+    @Column(nullable = false)
     private boolean done;
+
+    @Column(nullable = false)
     private int priority;
+
+    @CreationTimestamp
+    @Column(nullable = false, updatable = false)
     private LocalDateTime dateCreation;
+
+    @UpdateTimestamp
+    private LocalDateTime dateUpdate;
+
+    public Task(){} // Construtor vazio. JPA precisa dele para criar os objetos.
 
     public long getId() {
         return id;
@@ -52,6 +71,12 @@ public class Task {
     }
     public void setDateCreation(LocalDateTime dateCreation) {
         this.dateCreation = dateCreation;
+    }
+    public LocalDateTime getDateUpdate() {
+        return dateUpdate;
+    }
+    public void setDateUpdate(LocalDateTime dateUpdate) {
+        this.dateUpdate = dateUpdate;
     }
 
 }

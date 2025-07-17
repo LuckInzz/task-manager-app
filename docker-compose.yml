@@ -1,0 +1,47 @@
+# Define a versão da sintaxe do Docker Compose que estamos usando.
+version: '3.8'
+
+# Define a lista de 'serviços' ou 'programas' que queremos rodar.
+# No nosso caso, por enquanto, é apenas o banco de dados.
+services:
+  
+  # Damos um nome para o nosso serviço de banco de dados: 'postgres-db'
+  postgres-db:
+    # 'image' é a "planta" ou o "molde" para criar nosso programa.
+    # Aqui, estamos usando a imagem oficial do PostgreSQL, na versão 15.
+    image: postgres:15
+    
+    # Um nome amigável para o contêiner que será criado.
+    # Facilita encontrá-lo se precisarmos inspecioná-lo.
+    container_name: task_manager_postgres
+    
+    # Configuração para sempre reiniciar o contêiner se ele parar por algum motivo.
+    # Garante que nosso banco de dados esteja sempre disponível.
+    restart: always
+    
+    # 'environment' define as variáveis de ambiente (configurações)
+    # que serão passadas para dentro do contêiner do PostgreSQL.
+    environment:
+      # IMPORTANTE: Estes valores devem ser os mesmos que você colocou
+      # no seu arquivo 'application-prod.properties'.
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: tarefas_db # Nome do banco de dados que será criado automaticamente.
+      
+    # 'ports' faz a "ponte" entre o seu computador e o contêiner.
+    # Formato: "porta_no_seu_pc:porta_dentro_do_container"
+    # Isso permite que nossa aplicação Spring (rodando no seu PC na porta 8080)
+    # se conecte ao PostgreSQL (rodando dentro do contêiner na porta 5432).
+    ports:
+      - "5432:5432"
+      
+    # 'volumes' é a parte mais importante para a segurança dos seus dados.
+    # Ele cria uma espécie de "HD externo" para o contêiner.
+    # Os dados do banco serão salvos nesta pasta no seu computador, e não
+    # dentro do contêiner. Se o contêiner for apagado, os dados permanecem seguros.
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+# Declaração do volume que usamos acima. O Docker gerencia isso para nós.
+volumes:
+  postgres_data:
