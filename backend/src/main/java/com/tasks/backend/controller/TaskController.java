@@ -59,4 +59,9 @@ public class TaskController {
         return ResponseEntity.noContent().build();
     }
 
+    public ResponseEntity<Task> searchByName(String query) {
+        Task task = taskService.searchByName(query);
+        return ResponseEntity.ok(task);
+    }
+
 }
