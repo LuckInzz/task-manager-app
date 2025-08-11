@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.tasks.backend.services.TaskService;
@@ -32,6 +33,11 @@ public class TaskController {
     @PostMapping
     public Task createTask(@RequestBody Task task){
         return taskService.saveTask(task);
+    }
+
+    @PostMapping("/batch")
+    public List<Task> createTasks(@RequestBody List<Task> tasks){
+        return taskService.saveTasks(tasks);
     }
 
     @GetMapping
@@ -59,9 +65,10 @@ public class TaskController {
         return ResponseEntity.noContent().build();
     }
 
-    public ResponseEntity<Task> searchByName(String query) {
-        Task task = taskService.searchByName(query);
-        return ResponseEntity.ok(task);
+    @GetMapping("/search")
+    public ResponseEntity<List<Task>> getByName(@RequestParam(name="name") String query) {
+        List<Task> tasks = taskService.getByName(query);
+        return ResponseEntity.ok(tasks);
     }
 
 }
