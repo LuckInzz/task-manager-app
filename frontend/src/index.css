@@ -1,3 +1,25 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+@layer base {
+    :root{
+        --background: #F1F5F9;  /*bg-slate-100*/
+        --surface: #FFFFFF;     /*bg-white*/
+        --sidebar: #0F172A;     /*bg-slate-900*/
+
+        --primary: #2563EB;     /*text-blue-600*/
+        --secondary: #64748B;   /*text-slate-500*/
+
+        --text-main: #1E293B;   /*text-slate-800*/
+        --text-light: #94A3B8;  /*text-slate-400*/
+
+        --success: #22C55E;
+        --danger: #EF4444;
+        --warning: #F97316;
+
+        --font-sans: 'Inter', sans-serif;
+    }
+
+    body {
+        font-family: var(--font-sans);
+    }
+}
