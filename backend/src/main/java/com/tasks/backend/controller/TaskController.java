@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,7 +17,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.tasks.backend.services.TaskService;
-import com.tasks.backend.entity.Task;
+import com.tasks.backend.dto.task.TaskCreateDTO;
+import com.tasks.backend.dto.task.TaskResponseDTO;
+import com.tasks.backend.dto.task.TaskUpdateDTO;
+import com.tasks.backend.entity.User;
 
 @RestController
 @RequestMapping("/tasks")
@@ -31,29 +35,34 @@ public class TaskController {
     }
 
     @PostMapping
-    public Task createTask(@RequestBody Task task){
-        return taskService.saveTask(task);
+    public TaskResponseDTO createTask(@RequestBody TaskCreateDTO task, @AuthenticationPrincipal User currentUser){
+        return taskService.createTask(task, currentUser);
     }
 
     @PostMapping("/batch")
-    public List<Task> createTasks(@RequestBody List<Task> tasks){
-        return taskService.saveTasks(tasks);
+    public List<TaskResponseDTO> createTasks(@RequestBody List<TaskCreateDTO> tasks, @AuthenticationPrincipal User currentUser){
+        return taskService.createTasks(tasks, currentUser);
     }
 
     @GetMapping
-    public List<Task> getAll(){
+    public List<TaskResponseDTO> getAll(){
         return taskService.getAllTask();
     }
 
+    @GetMapping("/user")
+    public List<TaskResponseDTO> getAllByUser(@AuthenticationPrincipal User currentUser){
+        return taskService.getAllTaskByUser(currentUser);
+    }
+
     @GetMapping("/{id}")
-    public ResponseEntity<Task> getByID(@PathVariable Long id) {
-        Task task = taskService.getTaskById(id);
+    public ResponseEntity<TaskResponseDTO> getByID(@PathVariable Long id) {
+        TaskResponseDTO task = taskService.getTaskById(id);
         return ResponseEntity.ok(task);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Task> update(@PathVariable Long id, @RequestBody Task task) {
-        Task updatedTask = taskService.updateTask(id, task);
+    public ResponseEntity<TaskResponseDTO> update(@PathVariable Long id, @RequestBody TaskUpdateDTO task) {
+        TaskResponseDTO updatedTask = taskService.updateTask(id, task);
         return ResponseEntity.ok(updatedTask);
     }
 
@@ -66,8 +75,8 @@ public class TaskController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<Task>> getByName(@RequestParam(name="name") String query) {
-        List<Task> tasks = taskService.getByName(query);
+    public ResponseEntity<List<TaskResponseDTO>> getByName(@RequestParam(name="name") String query, @AuthenticationPrincipal User currentUser) {
+        List<TaskResponseDTO> tasks = taskService.getByName(query, currentUser);
         return ResponseEntity.ok(tasks);
     }
 

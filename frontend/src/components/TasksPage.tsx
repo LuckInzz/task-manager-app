@@ -62,13 +62,13 @@ const TasksPage: React.FC = () => {
         return date.toLocaleDateString('en-US', {month: 'long', day: 'numeric', year: 'numeric'})
     }
 
-    const getPriorityInfo = (priority: number) => {
+    const getPriorityInfo = (priority: String) => {
         switch (priority) {
-            case 3:
+            case 'LOW':
             return { label: 'Low Priority', bg: 'bg-green-200', text: 'text-green-800' };
-            case 2:
+            case 'MEDIUM':
             return { label: 'Medium Priority', bg: 'bg-yellow-200', text: 'text-yellow-800' };
-            case 1:
+            case 'HIGH':
             return { label: 'High Priority', bg: 'bg-red-200', text: 'text-red-800' };
             default:
             return { label: 'No Priority', bg: 'bg-gray-200', text: 'text-gray-800' };
