@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.tasks.backend.dto.user.UserResponseDTO;
+import com.tasks.backend.entity.User;
 import com.tasks.backend.services.UserService;
 
 @RestController
@@ -37,6 +39,14 @@ public class UserController {
     public ResponseEntity<UserResponseDTO> getById(@PathVariable Long id) {
         UserResponseDTO user = userService.getUserById(id);
         return ResponseEntity.ok(user);
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<UserResponseDTO> getMyInfo(@AuthenticationPrincipal User currentUser) {
+        // @AuthenticationPrincipal injeta o utilizador que foi validado a partir do token.
+        // Convertemos a entidade para um DTO seguro antes de a retornar.
+        UserResponseDTO userDto = userService.convertToResponseDTO(currentUser);
+        return ResponseEntity.ok(userDto);
     }
 
     @DeleteMapping("/{id}")

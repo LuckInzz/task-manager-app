@@ -1,5 +1,5 @@
 import React from "react";
-import Sidebar from './Sidebar';
+import Sidebar from './Navbar';
 
 // Este componente recebe "filhos" (children) que serão renderizados dentro dele.
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {

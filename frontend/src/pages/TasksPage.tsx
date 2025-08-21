@@ -2,11 +2,11 @@ import React, { useState, useEffect } from "react";
 import { useDebounce } from 'react-use'
 import api from "../services/api";
 import type { Task } from "../types/Task";
-import AddTaskForm from './AddTaskForm';
+import AddTaskForm from '../components/AddTaskForm';
 
 const TasksPage: React.FC = () => {
 
-    const [taskList, setTaskList] = useState<Task[]>([]);
+    const [tasks, setTasks] = useState<Task[]>([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
     useDebounce(() => setDebouncedSearchTerm(searchTerm), 1000, [searchTerm]); 
@@ -24,7 +24,7 @@ const TasksPage: React.FC = () => {
         try{
             const endpoint = query
                 ? `/tasks/search?name=${encodeURIComponent(query)}`
-                : `/tasks`;
+                : `/tasks/user`;
 
             const response = await api.get(endpoint);
 
@@ -32,16 +32,16 @@ const TasksPage: React.FC = () => {
 
             if (data.Response === 'False'){
                 setErrorMessage(data.Error || 'Failed to fetch tasks');
-                setTaskList([]);
+                setTasks([]);
                 return;
             }
 
             if (data.length === 0) {
-                setTaskList([]);
+                setTasks([]);
                 return;
             }
 
-            setTaskList(data);
+            setTasks(data);
             console.log(data);
 
         } catch (error){
@@ -77,7 +77,7 @@ const TasksPage: React.FC = () => {
 
     const handleTaskCreated = (newTask: Task) => {
         // Adiciona a nova tarefa no início da lista existente
-        setTaskList(currentTasks => [newTask, ...currentTasks]);
+        setTasks(currentTasks => [newTask, ...currentTasks]);
     };
 
     return (
@@ -92,7 +92,7 @@ const TasksPage: React.FC = () => {
                      className="rounded-lg bg-white border w-full pl-10 pr-4 py-2 border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-600"></input>
                 </div>
 
-                <button className="flex items-center py-2 px-4 rounded-lg bg-blue-600 hover:bg-blue-800
+                <button className="flex items-center py-2 px-4 rounded-lg bg-blue-700 hover:bg-blue-800
                  text-white font-semibold gap-1 cursor-pointer" onClick={handleTaskModel}>
                     <span className="text-[18px] pr-1">+</span>
                     <span>New Task</span>
@@ -105,28 +105,32 @@ const TasksPage: React.FC = () => {
                     <p>Loading...</p>
                 ) : errorMessage ? (
                     <p className="text-red-500">{errorMessage}</p>
-                ) : taskList.length === 0 ? (
+                ) : tasks.length === 0 ? (
                     <p className="text-[20px] flex justify-center font-semibold text-slate-800">Tasks not found</p>
                 ) : (
                     <ul>
-                        {taskList.map((task) => (
+                        {tasks.map((task) => (
                             <li key={task.id} className="flex justify-between items-center bg-white rounded-lg shadow-md hover:shadow-lg 
-                            transition-shadow mb-8 p-4">
+                            transition-shadow mb-8 p-4 hover:scale-101">
                                 <div className="flex gap-2 md:gap-4">
                                     <input type="checkbox" className="h-6 w-6 rounded-md text-blue-600 cursor-pointer"></input>
                                     <p className="text-slate-800 font-semibold text-lg">{task.taskName}</p>
                                 </div>
 
-                                <div className="flex items-center text-sm gap-5 md:gap-10">
+                                <div className="flex items-center text-sm gap-10">
                                     <p className="text-slate-400">{formatDate(task.dateUpdate)}</p>
-                                    <p className="px-3 py-1 rounded-xl font-semibold bg-purple-200 text-purple-800">Group</p>
+                                    <p className="px-3 py-1 rounded-xl font-semibold bg-purple-200 text-purple-800">
+                                        {task.taskListName != null ? task.taskListName : 'None'}
+                                    </p>
                                     {(() => {
                                         const { label, bg, text } = getPriorityInfo(task.priority);
                                         return (
                                             <p className={`px-3 py-1 rounded-xl font-semibold ${bg} ${text}`}>{label}</p>
                                         );
                                     })()}
-                                    <button className="cursor-pointer translate-y-[-5px]">...</button>
+                                    <button className="cursor-pointer">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+                                    </button>
                                 </div>
                             </li>
                         ))}

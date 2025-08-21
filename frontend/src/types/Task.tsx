@@ -7,6 +7,6 @@ export interface Task {
     priority: string;
     dateCreation: string; // Datas vêm como string no formato ISO (ex: "2025-08-07T22:30:00")
     dateUpdate: string;
-    groupId: number;
-    groupName: string;
+    taskListId: number;
+    taskListName: string;
 }

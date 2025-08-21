@@ -15,6 +15,8 @@ import com.tasks.backend.dto.user.UserResponseDTO;
 import com.tasks.backend.services.AuthService;
 import com.tasks.backend.services.UserService;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/auth")
 @CrossOrigin(origins = "http://localhost:5173")
@@ -30,13 +32,13 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<UserResponseDTO> registerUser(@RequestBody UserRegisterDTO user) {
+    public ResponseEntity<UserResponseDTO> registerUser(@Valid @RequestBody UserRegisterDTO user) {
         UserResponseDTO userResponseDTO = userService.registerUser(user);
         return ResponseEntity.status(201).body(userResponseDTO);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponseDTO> loginUser(@RequestBody LoginRequestDTO loginRequestDTO) {
+    public ResponseEntity<LoginResponseDTO> loginUser(@Valid @RequestBody LoginRequestDTO loginRequestDTO) {
         LoginResponseDTO response = authService.loginUser(loginRequestDTO);
         return ResponseEntity.ok(response);
     }

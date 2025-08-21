@@ -1,8 +1,12 @@
 package com.tasks.backend.dto.user;
 
+import jakarta.validation.constraints.NotBlank;
+
 public class LoginRequestDTO {
     
+    @NotBlank(message = "Email can not be blank.")
     private String email;
+    @NotBlank(message = "Password can not be blank.")
     private String password;
 
     public LoginRequestDTO(){}

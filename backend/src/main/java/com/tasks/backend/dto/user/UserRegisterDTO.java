@@ -1,9 +1,20 @@
 package com.tasks.backend.dto.user;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+
 public class UserRegisterDTO {
     
+    @NotBlank(message="Name can not be blank")
     private String username;
+
+    @NotBlank(message = "Email can not be blank.")
+    @Email(message = "Email format is invalid.")
     private String email;
+
+    @NotBlank(message = "Password can not be blank.")
+    @Size(min = 6, message = "Password must have a least 6 characters/numbers.")
     private String password;
 
     public UserRegisterDTO(){}

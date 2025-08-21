@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import com.tasks.backend.dto.user.UserRegisterDTO;
 import com.tasks.backend.dto.user.UserResponseDTO;
 import com.tasks.backend.entity.User;
+import com.tasks.backend.exception.EmailAlreadyExistsException;
 import com.tasks.backend.exception.ResourceNotFoundException;
 import com.tasks.backend.repository.UserRepository;
 
@@ -30,7 +31,7 @@ public class UserService {
 
     public UserResponseDTO registerUser(UserRegisterDTO registerDTO) {
         if(userRepository.existsByEmail(registerDTO.getEmail())){
-            throw new IllegalStateException("Email already used");
+            throw new EmailAlreadyExistsException("Email already used");
         }
 
         User newUser = new User();
@@ -60,10 +61,10 @@ public class UserService {
         userRepository.deleteById(id);
     }
 
-    private UserResponseDTO convertToResponseDTO(User user) {
+    public UserResponseDTO convertToResponseDTO(User user) {
         UserResponseDTO dto = new UserResponseDTO();
         dto.setId(user.getId());
-        dto.setUsername(user.getUsername());
+        dto.setUsername(user.getName());
         dto.setEmail(user.getEmail());
         return dto;
     }

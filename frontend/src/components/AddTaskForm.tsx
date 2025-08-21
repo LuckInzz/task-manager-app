@@ -16,7 +16,7 @@ const AddTaskForm: React.FC<AddTaskFormProps> = ({ isOpen, onClose, onTaskCreate
 
     const [taskName, setTaskName] = useState('');
     const [description, setDescription] = useState('');
-    const [priority, setPriority] = useState(3); // Prioridade 'Baixa' como padrão
+    const [priority, setPriority] = useState("LOW"); // Prioridade 'Baixa' como padrão
     //const [groupId, setGroupId] = useState(1); // Futuramente, o ID do grupo
 
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -33,8 +33,7 @@ const AddTaskForm: React.FC<AddTaskFormProps> = ({ isOpen, onClose, onTaskCreate
       const newTaskData = {
         taskName,
         description,
-        done: false,
-        priority,
+        priority
       };
 
       try{
@@ -90,19 +89,16 @@ const AddTaskForm: React.FC<AddTaskFormProps> = ({ isOpen, onClose, onTaskCreate
                 <label htmlFor="taskGroup" className="block text-sm">Group</label>
                 <select id="taskGroup" 
                 className="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none bg-white cursor-pointer">
-                  <option>Work</option>
-                  <option>Study</option>
-                  <option>Personal</option>
                   <option>None</option>
                 </select>
               </div>
               <div>
-                <label htmlFor="taskPriority" className="block text-sm font-medium text-slate-600 mb-1">Prioridade</label>
-                <select id="taskPriority" value={priority} onChange={(e) => setPriority(Number(e.target.value))}
+                <label htmlFor="taskPriority" className="block text-sm">Prioridade</label>
+                <select id="taskPriority" value={priority} onChange={(e) => setPriority(e.target.value)}
                 className="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none bg-white cursor-pointer">
-                  <option value={3}>Baixa</option>
-                  <option value={2}>Média</option>
-                  <option value={1}>Alta</option>
+                  <option value={"LOW"}>Baixa</option>
+                  <option value={"MEDIUM"}>Média</option>
+                  <option value={"HIGH"}>Alta</option>
                 </select>
               </div>
             </div>
