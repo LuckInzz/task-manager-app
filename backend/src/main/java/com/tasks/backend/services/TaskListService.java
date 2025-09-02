@@ -53,6 +53,8 @@ public class TaskListService {
     public TaskListResponseDTO createTaskList(TaskListCreateDTO taskList, User currentUser) {
         TaskList newTaskList = new TaskList();
         newTaskList.setName(taskList.getName());
+        newTaskList.setDescription(taskList.getDescription());
+        newTaskList.setColor(taskList.getColor());
         newTaskList.setUser(currentUser);
 
         TaskList savedTaskList = taskListRepository.save(newTaskList);
@@ -84,6 +86,8 @@ public class TaskListService {
                     .orElseThrow(() -> new ResourceNotFoundException("Task list not found with id: " + id));
         
         oldTaskList.setName(taskListUpdated.getName());
+        oldTaskList.setDescription(taskListUpdated.getDescription());
+        oldTaskList.setColor(taskListUpdated.getColor());
         taskListRepository.save(oldTaskList);
         return convertToResponseDTO(oldTaskList);
     }
@@ -100,6 +104,9 @@ public class TaskListService {
         TaskListResponseDTO dto = new TaskListResponseDTO();
         dto.setId(taskList.getId());
         dto.setName(taskList.getName());
+        dto.setDescription(taskList.getDescription());
+        dto.setColor(taskList.getColor());
+        dto.setDateCreation(taskList.getDateCreation());
         if (taskList.getTasks() != null) {
             List<TaskResponseDTO> taskDTOs = taskList.getTasks().stream()
                     .map(this::convertToTaskResponseDTO)
@@ -118,7 +125,6 @@ public class TaskListService {
         dto.setStatus(task.getStatus());
         dto.setPriority(task.getPriority());
         dto.setDateCreation(task.getDateCreation());
-        dto.setDateUpdate(task.getDateUpdate());
         dto.setTaskListId(task.getTaskList().getId());
         dto.setTaskListName(task.getTaskList().getName());
 

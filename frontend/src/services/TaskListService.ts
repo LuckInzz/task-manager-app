@@ -1,10 +1,5 @@
 import api from './api';
-import type { TaskList } from '../types/TaskList';
-
-// DTO para criar uma nova lista (apenas o nome é necessário)
-interface CreateTaskListDTO {
-    name: string;
-}
+import type { CreateTaskList, TaskList } from '../types/TaskList';
 
 /**
  * Busca todas as listas de tarefas do utilizador autenticado.
@@ -15,10 +10,18 @@ export const getMyTaskLists = async (): Promise<TaskList[]> => {
 };
 
 /**
+ * Busca todas as listas de tarefas do utilizador autenticado.
+ */
+export const searchTaskListByName = async (): Promise<TaskList[]> => {
+    const response = await api.get<TaskList[]>('/task-lists/search?name');
+    return response.data;
+};
+
+/**
  * Cria uma nova lista de tarefas.
  * @param data - Um objeto contendo o nome da nova lista.
  */
-export const createTaskList = async (data: CreateTaskListDTO): Promise<TaskList> => {
+export const createTaskList = async (data: CreateTaskList): Promise<TaskList> => {
     const response = await api.post<TaskList>('/task-lists', data);
     return response.data;
 };

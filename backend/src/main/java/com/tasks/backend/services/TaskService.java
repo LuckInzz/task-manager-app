@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.tasks.backend.repository.TaskListRepository;
 import com.tasks.backend.repository.TaskRepository;
-import com.tasks.backend.repository.UserRepository;
+//import com.tasks.backend.repository.UserRepository;
 import com.tasks.backend.entity.Task;
 import com.tasks.backend.entity.User;
 import com.tasks.backend.entity.TaskList;
@@ -22,13 +22,13 @@ import java.util.stream.Collectors;
 public class TaskService {
 
     private final TaskRepository taskRepository;
-    private final UserRepository userRepository;
+    //private final UserRepository userRepository;
     private final TaskListRepository taskListRepository;
 
     @Autowired
-    public TaskService(TaskRepository taskRepository, UserRepository userRepository, TaskListRepository groupRepository) {
+    public TaskService(TaskRepository taskRepository, /*UserRepository userRepository,*/ TaskListRepository groupRepository) {
         this.taskRepository = taskRepository;
-        this.userRepository = userRepository;
+        //this.userRepository = userRepository;
         this.taskListRepository = groupRepository;
     }
     
@@ -119,7 +119,6 @@ public class TaskService {
         dto.setStatus(task.getStatus());
         dto.setPriority(task.getPriority());
         dto.setDateCreation(task.getDateCreation());
-        dto.setDateUpdate(task.getDateUpdate());
         
         //Verifica se a tarefa tem um grupo atribuido
         if (task.getTaskList() != null) {

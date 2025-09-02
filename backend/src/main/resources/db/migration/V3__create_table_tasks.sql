@@ -6,7 +6,6 @@ CREATE TABLE tasks (
     status VARCHAR(20) NOT NULL,
     priority VARCHAR(20) NOT NULL,
     date_creation TIMESTAMP NOT NULL,
-    date_update TIMESTAMP,
     user_id BIGINT NOT NULL,
     task_list_id BIGINT,
     CONSTRAINT fk_users FOREIGN KEY (user_id) REFERENCES users(id),

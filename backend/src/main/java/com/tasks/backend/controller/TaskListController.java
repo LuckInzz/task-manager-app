@@ -23,7 +23,7 @@ import com.tasks.backend.entity.User;
 import com.tasks.backend.services.TaskListService;
 
 @RestController
-@RequestMapping("/task_list")
+@RequestMapping("/task-lists")
 @CrossOrigin(origins = "http://localhost:5173")
 public class TaskListController {
     

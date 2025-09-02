@@ -4,6 +4,9 @@ import java.util.List;
 
 public class TaskListUpdateDTO {
     
+    private String name;
+    private String description;
+    private String color;
     private List<Long> tasksId;
     
     public List<Long> getTasksId() {

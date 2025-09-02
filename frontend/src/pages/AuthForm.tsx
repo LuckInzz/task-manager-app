@@ -1,9 +1,8 @@
-import React, { use, useState } from "react";
-import type { UserResponse } from "../types/Auth.tsx";
-import { login, register, getMe } from "../services/AuthService.ts"
+import React, { useState } from "react";
 import { Spinner } from "../components/Spinner.tsx";
-import toast from 'react-hot-toast'; // <-- Importe o toast
+import toast from 'react-hot-toast';
 import axios from "axios";
+import { useStore } from '../stores/useStore.ts'
 //import { Mail, Lock, User, ArrowRight } from "lucide-react";
 
 const MailIcon = ({ className }: { className?: string }) => (
@@ -79,19 +78,6 @@ const ArrowRightIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
-interface AuthFormProps {
-  /*onRegister: (user: UserResponse) => void;*/
-  onAuth: (token:string) => void;
-}
-
-interface RegisterFormProps {
-  onRegisterSuccess: () => void;
-}
-
-interface LoginFormProps {
-  onLogin: (user: UserResponse, token: string) => void;
-}
-
 interface InputFieldProps {
   id: string;
   label: string;
@@ -127,20 +113,19 @@ const InputField: React.FC<InputFieldProps> = ({ id, label, type, placeholder, i
 
 // --- Componente do Formulário de Login ---
 
-const LoginForm = ( { onAuth }:AuthFormProps ) => {
+const LoginForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<{ [key: string]: string }>({});
   const [isLoading, setIsLoading] = useState(false);
+  const { login } = useStore();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     setError({});
     try {
-      const { token } = await login({ email, password });
-      localStorage.setItem('authToken', token);
-      onAuth(token);
+      await login({ email, password });
       toast.success('Successfully logged in');
     } catch (err) {
       if (axios.isAxiosError(err) && err.response) {
@@ -199,7 +184,7 @@ const LoginForm = ( { onAuth }:AuthFormProps ) => {
               transition-transform hover:scale-105 hover:cursor-pointer
               focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
               >
-              {Spinner(5, "text-white", "fill-green-500")}
+              <Spinner h={5} bg={"text-white"} color={"fill-green-500"}/>
               Loading...
               </button>         : 
           <button
@@ -218,14 +203,17 @@ const LoginForm = ( { onAuth }:AuthFormProps ) => {
   );
 };
 
-// --- Componente do Formulário de Cadastro ---
+interface RegisterFormProps {
+  onRegisterSuccess: () => void;
+}
 
-const RegisterForm = ( { onRegisterSuccess }:RegisterFormProps ) => {
+const RegisterForm: React.FC<RegisterFormProps> = ({ onRegisterSuccess }) => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState (false);
   const [error, setError] = useState<{ [key: string]: string}>({});
+  const { register } = useStore();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -312,7 +300,7 @@ const RegisterForm = ( { onRegisterSuccess }:RegisterFormProps ) => {
               transition-transform hover:scale-105 hover:cursor-pointer
               focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
               >
-              {Spinner(5, "text-white", "fill-green-500")}
+              <Spinner h={5} bg={"text-white"} color={"fill-green-500"}/>
               Loading...
               </button>         : 
           <button
@@ -331,7 +319,7 @@ const RegisterForm = ( { onRegisterSuccess }:RegisterFormProps ) => {
   );
 }
 
-const AuthForm = ( { onAuth }:AuthFormProps ) => {
+const AuthForm = () => {
     const [authMode, setAuthMode] = useState<'login' | 'register'>('login');
 
     const handleRegisterSuccess = () => {
@@ -377,7 +365,7 @@ const AuthForm = ( { onAuth }:AuthFormProps ) => {
         {/* Container do Formulário */}
         <div className="rounded-2xl bg-white p-8 shadow-lg">
           {authMode === 'login' ? (
-            <LoginForm onAuth={onAuth} />
+            <LoginForm />
           ) : (
             <RegisterForm onRegisterSuccess={handleRegisterSuccess} />
           )}

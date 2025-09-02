@@ -55,9 +55,6 @@ public class Task {
     @Column(nullable = false, updatable = false)
     private LocalDateTime dateCreation;
 
-    @UpdateTimestamp
-    private LocalDateTime dateUpdate;
-
     @ManyToOne(fetch = FetchType.LAZY)  // LAZY = só carrega o utilizador quando for pedido
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
@@ -71,6 +68,7 @@ public class Task {
     public Long getId() {
         return id;
     }
+    
     public void setId(Long id) {
         this.id = id;
     }
@@ -78,6 +76,7 @@ public class Task {
     public String getTaskName() {
         return taskName;
     }
+
     public void setTaskName(String taskName) {
         this.taskName = taskName;
     }
@@ -85,6 +84,7 @@ public class Task {
     public String getDescription() {
         return description;
     }
+
     public void setDescription(String description) {
         this.description = description;
     }
@@ -92,6 +92,7 @@ public class Task {
     public TaskStatus getStatus() {
         return status;
     }
+
     public void setStatus(TaskStatus status) {
         this.status = status;
     }
@@ -99,6 +100,7 @@ public class Task {
     public TaskPriority getPriority() {
         return priority;
     }
+
     public void setPriority(TaskPriority priority) {
         this.priority = priority;
     }
@@ -106,20 +108,15 @@ public class Task {
     public LocalDateTime getDateCreation() {
         return dateCreation;
     }
+
     public void setDateCreation(LocalDateTime dateCreation) {
         this.dateCreation = dateCreation;
-    }
-
-    public LocalDateTime getDateUpdate() {
-        return dateUpdate;
-    }
-    public void setDateUpdate(LocalDateTime dateUpdate) {
-        this.dateUpdate = dateUpdate;
     }
     
     public User getUser() {
         return user;
     }
+
     public void setUser(User user) {
         this.user = user;
     }

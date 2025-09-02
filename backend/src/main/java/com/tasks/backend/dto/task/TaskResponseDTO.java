@@ -12,7 +12,6 @@ public class TaskResponseDTO {
     private Task.TaskStatus status;
     private Task.TaskPriority priority;
     private LocalDateTime dateCreation;
-    private LocalDateTime dateUpdate;
     private Long taskListId;
     private String taskListName;
 
@@ -64,14 +63,6 @@ public class TaskResponseDTO {
 
     public void setDateCreation(LocalDateTime dateCreation) {
         this.dateCreation = dateCreation;
-    }
-
-    public LocalDateTime getDateUpdate() {
-        return dateUpdate;
-    }
-
-    public void setDateUpdate(LocalDateTime dateUpdate) {
-        this.dateUpdate = dateUpdate;
     }
 
     public Long getTaskListId() {

@@ -1,4 +1,12 @@
-export const Spinner = (h: number, bg:string, color:string) => {
+import type React from "react";
+
+interface SpinnerProps {
+    h: number,
+    bg: string,
+    color: string
+}
+
+export const Spinner: React.FC<SpinnerProps> = ({ h, bg, color }) => {
     return (
         <div role="status">
             <svg

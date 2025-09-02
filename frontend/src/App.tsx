@@ -1,61 +1,57 @@
 import { useEffect, useState } from 'react';
 import { Toaster } from 'react-hot-toast';
-import Sidebar from './components/Navbar';
+import Navbar from './components/Navbar';
 import TasksPage from './pages/TasksPage';
+import ListsPage from './pages/ListsPage';
+import DashboardPage from './pages/DashboardPage'
 import AuthForm from './pages/AuthForm';
-import type { UserResponse } from './types/Auth';
-import { getMe } from './services/AuthService';
-import api from './services/api';
+import { useStore } from './stores/useStore'
+import { Spinner } from './components/Spinner';
 
 function App() {
-  const [user, setUser] = useState<UserResponse | null>(null);
-  const [hasToken, setHasToken] = useState(false)
+  const [page, setPage] = useState('Tasks');
+  const {user, isLoading, checkAuth, logout} = useStore();
 
-  const handleAuth = (token: string) => {
-    localStorage.setItem('authToken', token);
-    setHasToken(true)
-    api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-  };
-
-  const handleLogout = () => {
-      localStorage.removeItem('authToken');
-      setUser(null);
-      setHasToken(false)
+  const handleChangePage = (page: string) => {
+    setPage(page);
   }
 
   useEffect(() => {
-    const validateToken = async () => {
-      const token = localStorage.getItem('authToken');
-      if (token) {
-        api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-        try {
-          // Se houver um token, tentamos buscar os dados do utilizador
-          const userData = await getMe();
-          console.log(userData);
-          setUser(userData); // Se for bem-sucedido, o utilizador está logado
-          setHasToken(true)
-        } catch (error) {
-          // Se o token for inválido, limpa-o
-          localStorage.removeItem('authToken');
-          console.error("Token inválido ou expirado.", error);
-          setHasToken(false)
-        }
-      }
-    };
-    validateToken();
+    checkAuth();
   }, []);
+
+  const renderActivePage = () => {
+    switch (page) {
+      case 'Tasks':
+          return <TasksPage/>;
+      case 'Lists':
+          return <ListsPage/>;
+      case 'Dashboard':
+          return <DashboardPage />;
+      //case 'Analytics':
+          //return <PlaceholderPage title="Analytics" />;
+      default:
+          return <TasksPage/>;
+    }
+  };
+
+  if(isLoading) {
+    <Spinner h={8} bg={"text-white"} color={"fill-purple-500"}/> 
+  }
 
   return (
     <>
       <Toaster position="top-center" reverseOrder={false} />
 
-      {!hasToken ? (
-        <AuthForm onAuth={handleAuth} />
+      {!user ? (
+        <AuthForm /*onAuth={handleAuth}*/ />
       ) : (
-        <div className="flex h-screen bg-white p-8">
-          <Sidebar onLogout={handleLogout} user={user} />
-          <main className="flex-1 overflow-y-auto">
-            <TasksPage />
+        <div className="bg-slate-100 h-full">
+          <Navbar onLogout={logout} onChangePage={handleChangePage} />
+          <main className="pt-2 pb-16 md:pb-0 md:pt-20">
+            <div className=''>
+              {renderActivePage()}
+            </div>
           </main>
         </div>
       )}
