@@ -14,3 +14,9 @@ export interface CreateTaskList {
     description: string;
     color: string;
 }
+
+export interface UpdateTaskList {
+    name: string;
+    description: string;
+    color: string;
+}

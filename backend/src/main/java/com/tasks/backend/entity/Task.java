@@ -24,7 +24,6 @@ public class Task {
 
     public enum TaskStatus {
         PENDING,
-        IN_PROGRESS,
         COMPLETED
     }
     public enum TaskPriority {

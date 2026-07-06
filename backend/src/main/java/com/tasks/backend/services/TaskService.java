@@ -64,10 +64,12 @@ public class TaskService {
         newTask.setUser(currentUser);
 
         //Se a task tem um grupo atribuido
-        if (taskDTO.getTaskListId() != null){
+        if (taskDTO.getTaskListId() != null && taskDTO.getTaskListId() != 0){
             TaskList group = taskListRepository.findById(taskDTO.getTaskListId())
                     .orElseThrow(() -> new ResourceNotFoundException("Group not found with id: " + taskDTO.getTaskListId()));
             newTask.setTaskList(group);
+        } else {
+            newTask.setTaskList(null);
         }
 
         Task savedTask = taskRepository.save(newTask);
@@ -95,10 +97,12 @@ public class TaskService {
         oldTask.setDescription(taskUpdatedDTO.getDescription());
         oldTask.setStatus(taskUpdatedDTO.getStatus());
         oldTask.setPriority(taskUpdatedDTO.getPriority());
-        if (taskUpdatedDTO.getTaskListId() != null){
+        if (taskUpdatedDTO.getTaskListId() != null && taskUpdatedDTO.getTaskListId() != 0){
             TaskList group = taskListRepository.findById(taskUpdatedDTO.getTaskListId())
                             .orElseThrow(() -> new ResourceNotFoundException("Group not found with id: " + taskUpdatedDTO.getTaskListId()));
             oldTask.setTaskList(group);
+        } else {
+            oldTask.setTaskList(null);
         }
         taskRepository.save(oldTask);
         return convertToResponseDTO(oldTask);

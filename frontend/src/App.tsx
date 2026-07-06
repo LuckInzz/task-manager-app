@@ -7,6 +7,7 @@ import DashboardPage from './pages/DashboardPage'
 import AuthForm from './pages/AuthForm';
 import { useStore } from './stores/useStore'
 import { Spinner } from './components/Spinner';
+import CalendarPage from './pages/CalendarPage';
 
 function App() {
   const [page, setPage] = useState('Tasks');
@@ -28,6 +29,8 @@ function App() {
           return <ListsPage/>;
       case 'Dashboard':
           return <DashboardPage />;
+      case 'Calendar':
+          return <CalendarPage />;
       //case 'Analytics':
           //return <PlaceholderPage title="Analytics" />;
       default:
