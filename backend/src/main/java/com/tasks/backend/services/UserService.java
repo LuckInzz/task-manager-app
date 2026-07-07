@@ -31,7 +31,7 @@ public class UserService {
 
     public UserResponseDTO registerUser(UserRegisterDTO registerDTO) {
         if(userRepository.existsByEmail(registerDTO.getEmail())){
-            throw new EmailAlreadyExistsException("Email already used");
+            throw new EmailAlreadyExistsException("Registration failed");
         }
 
         User newUser = new User();

@@ -31,38 +31,58 @@ public class SecurityFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         final String authHeader = request.getHeader("Authorization");
-        final String jwt;
-        final String userEmail;
+        String jwt = null;
+        String userEmail = null;
 
-        // 1. Verifica se o cabeçalho de autorização existe e se começa com "Bearer "
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            filterChain.doFilter(request, response); // Se não, passa para o próximo filtro e termina
+        // Try to get token from cookie first
+        if (request.getCookies() != null) {
+            for (jakarta.servlet.http.Cookie cookie : request.getCookies()) {
+                if ("authToken".equals(cookie.getName())) {
+                    jwt = cookie.getValue();
+                    break;
+                }
+            }
+        }
+
+        // Fallback to Authorization header
+        if (jwt == null && authHeader != null && authHeader.startsWith("Bearer ")) {
+            jwt = authHeader.substring(7);
+        }
+
+        if (jwt == null) {
+            filterChain.doFilter(request, response);
             return;
         }
 
-        // 2. Extrai o token do cabeçalho (remove o "Bearer ")
-        jwt = authHeader.substring(7);
-
-        // 3. Extrai o email do utilizador a partir do token
-        userEmail = jwtService.extractUsername(jwt);
+        try {
+            userEmail = jwtService.extractUsername(jwt);
+        } catch (Exception e) {
+            // Token parsing failed (e.g., expired or invalid signature)
+            filterChain.doFilter(request, response);
+            return;
+        }
 
         // 4. Verifica se o email existe e se o utilizador ainda não está autenticado
         if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            // Carrega os detalhes do utilizador da base de dados
-            UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
+            try {
+                // Carrega os detalhes do utilizador da base de dados
+                UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
 
-            // 5. Valida o token (compara com os detalhes do utilizador)
-            if (jwtService.isTokenValid(jwt, userDetails)) {
-                // Se o token for válido, cria um objeto de autenticação
-                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                        userDetails,
-                        null, // As credenciais são nulas porque já foram validadas pelo token
-                        userDetails.getAuthorities()
-                );
-                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                
-                // 6. Atualiza o Contexto de Segurança do Spring
-                SecurityContextHolder.getContext().setAuthentication(authToken);
+                // 5. Valida o token (compara com os detalhes do utilizador)
+                if (jwtService.isTokenValid(jwt, userDetails)) {
+                    // Se o token for válido, cria um objeto de autenticação
+                    UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                            userDetails,
+                            null, // As credenciais são nulas porque já foram validadas pelo token
+                            userDetails.getAuthorities()
+                    );
+                    authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    
+                    // 6. Atualiza o Contexto de Segurança do Spring
+                    SecurityContextHolder.getContext().setAuthentication(authToken);
+                }
+            } catch (Exception e) {
+                // User not found or other error loading user. Proceed as anonymous.
             }
         }
         

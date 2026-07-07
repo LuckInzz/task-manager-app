@@ -42,21 +42,21 @@ const LockIcon = ({ className }: { className?: string }) => (
 );
 
 const UserIcon = ({ className }: { className?: string }) => (
-    <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        className={className}
-    >
-        <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
-        <circle cx="12" cy="7" r="4" />
-    </svg>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className={className}
+  >
+    <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+    <circle cx="12" cy="7" r="4" />
+  </svg>
 );
 
 
@@ -131,7 +131,7 @@ const LoginForm = () => {
       if (axios.isAxiosError(err) && err.response) {
         const status = err.response.status;
         const data = err.response.data;
-        if(status === 400) {
+        if (status === 400) {
           toast.error('Invalid email or password');
           setError(data)
         }
@@ -157,13 +157,13 @@ const LoginForm = () => {
             label="Email"
             type="email"
             placeholder="your@email.com"
-            icon={<MailIcon className="h-5 w-5 text-gray-400" />} 
-            value={email} 
+            icon={<MailIcon className="h-5 w-5 text-gray-400" />}
+            value={email}
             onChange={(e) => setEmail(e.target.value)}
-            />
+          />
           {error.email && <p className="text-xs text-red-600 mt-1">{error.email}</p>}
         </div>
-        <div>  
+        <div>
           <InputField
             id="password"
             label="Password"
@@ -171,32 +171,32 @@ const LoginForm = () => {
             placeholder="••••••••"
             icon={<LockIcon className="h-5 w-5 text-gray-400" />}
             value={password}
-            onChange={(e) => setPassword(e.target.value)} 
-            />
+            onChange={(e) => setPassword(e.target.value)}
+          />
           {error.password && <p className="text-xs text-red-600 mt-1">{error.password}</p>}
         </div>
         <div>
-          {isLoading ? 
-          <button
+          {isLoading ?
+            <button
               type="submit"
               className="flex w-full items-center justify-center gap-2 rounded-lg bg-gradient-to-r 
               from-indigo-500 to-purple-500 px-4 py-3 text-sm font-semibold text-white shadow-sm 
               transition-transform hover:scale-105 hover:cursor-pointer
               focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-              >
-              <Spinner h={5} bg={"text-white"} color={"fill-green-500"}/>
+            >
+              <Spinner h={5} bg={"text-white"} color={"fill-green-500"} />
               Loading...
-              </button>         : 
-          <button
+            </button> :
+            <button
               type="submit"
               className="flex w-full items-center justify-center gap-2 rounded-lg bg-gradient-to-r 
               from-indigo-500 to-purple-500 px-4 py-3 text-sm font-semibold text-white shadow-sm 
               transition-transform hover:scale-105 hover:cursor-pointer
               focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-              >
+            >
               Sign in
               <ArrowRightIcon className="h-4 w-4" />
-          </button>}
+            </button>}
         </div>
       </form>
     </div>
@@ -211,8 +211,8 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onRegisterSuccess }) => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [isLoading, setIsLoading] = useState (false);
-  const [error, setError] = useState<{ [key: string]: string}>({});
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<{ [key: string]: string }>({});
   const { register } = useStore();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -220,7 +220,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onRegisterSuccess }) => {
     setIsLoading(true);
     setError({});
     try {
-      await register({username, email, password });
+      await register({ username, email, password });
       onRegisterSuccess();
       toast.success('Account created successfully')
     } catch (err) {
@@ -228,11 +228,11 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onRegisterSuccess }) => {
         const status = err.response.status;
         const data = err.response.data;
 
-        if(status === 409) {
-          toast.error(err.message);
-          setError({ email: data.message || 'Email already in use' });
+        if (status === 409) {
+          toast.error('Registration failed. Please check your data or try logging in.');
+          setError({ email: 'Registration failed for this email' });
         }
-        else if(status === 400) {
+        else if (status === 400) {
           toast.error('Check the registration form');
           setError(data)
         }
@@ -251,8 +251,8 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onRegisterSuccess }) => {
   return (
     <div className="animate-fade-in space-y-6">
       <div>
-          <h2 className="text-2xl font-bold tracking-tight text-gray-900">Create account</h2>
-          <p className="mt-1 text-sm text-gray-600">Get started with your productivity journey</p>
+        <h2 className="text-2xl font-bold tracking-tight text-gray-900">Create account</h2>
+        <p className="mt-1 text-sm text-gray-600">Get started with your productivity journey</p>
       </div>
       <form onSubmit={handleSubmit} className="space-y-6">
         <div>
@@ -262,9 +262,9 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onRegisterSuccess }) => {
             type="text"
             placeholder="Your Name"
             icon={<UserIcon className="h-5 w-5 text-gray-400" />}
-            value={username} 
+            value={username}
             onChange={(e) => setUsername(e.target.value)}
-            />
+          />
           {error.username && <p className="text-xs text-red-600 mt-1">{error.username}</p>}
         </div>
         <div>
@@ -274,9 +274,9 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onRegisterSuccess }) => {
             type="email"
             placeholder="your@email.com"
             icon={<MailIcon className="h-5 w-5 text-gray-400" />}
-            value={email} 
+            value={email}
             onChange={(e) => setEmail(e.target.value)}
-            />
+          />
           {error.email && <p className="text-xs text-red-600 mt-1">{error.email}</p>}
         </div>
         <div>
@@ -288,31 +288,31 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onRegisterSuccess }) => {
             icon={<LockIcon className="h-5 w-5 text-gray-400" />}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            />
+          />
           {error.password && <p className="text-xs text-red-600 mt-1">{error.password}</p>}
         </div>
         <div>
-          {isLoading ? 
-          <button
+          {isLoading ?
+            <button
               type="submit"
               className="flex w-full items-center justify-center gap-2 rounded-lg bg-gradient-to-r 
               from-indigo-500 to-purple-500 px-4 py-3 text-sm font-semibold text-white shadow-sm 
               transition-transform hover:scale-105 hover:cursor-pointer
               focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-              >
-              <Spinner h={5} bg={"text-white"} color={"fill-green-500"}/>
+            >
+              <Spinner h={5} bg={"text-white"} color={"fill-green-500"} />
               Loading...
-              </button>         : 
-          <button
+            </button> :
+            <button
               type="submit"
               className="flex w-full items-center justify-center gap-2 rounded-lg bg-gradient-to-r 
               from-indigo-500 to-purple-500 px-4 py-3 text-sm font-semibold text-white shadow-sm 
               transition-transform hover:scale-105 hover:cursor-pointer
               focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-              >
+            >
               Create Account
               <ArrowRightIcon className="h-4 w-4" />
-          </button>}
+            </button>}
         </div>
       </form>
     </div>
@@ -320,43 +320,41 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onRegisterSuccess }) => {
 }
 
 const AuthForm = () => {
-    const [authMode, setAuthMode] = useState<'login' | 'register'>('login');
+  const [authMode, setAuthMode] = useState<'login' | 'register'>('login');
 
-    const handleRegisterSuccess = () => {
-        // Após o registo, muda a vista de volta para o login.
-        // Poderíamos também mostrar uma mensagem de sucesso aqui.
-        setAuthMode('login');
-    };
+  const handleRegisterSuccess = () => {
+    // Após o registo, muda a vista de volta para o login.
+    // Poderíamos também mostrar uma mensagem de sucesso aqui.
+    setAuthMode('login');
+  };
 
-    return(
+  return (
     <div className="flex min-h-screen w-full flex-col items-center justify-center bg-gray-100 p-4">
-        <div className="w-full max-w-md">
-            {/* Cabeçalho */}
-            <div className="mb-8 text-center">
-                <h1 className="text-3xl mb-2">Task Manager</h1>
-                <div className="mx-auto h-2 w-full max-w-xs rounded-full bg-gradient-to-r from-indigo-500 to-purple-500"></div>
-                <p className="mt-4 text-sm text-gray-600">Organize your tasks with style</p>
-            </div>
+      <div className="w-full max-w-md">
+        {/* Cabeçalho */}
+        <div className="mb-8 text-center">
+          <h1 className="text-3xl mb-2">Task Manager</h1>
+          <div className="mx-auto h-2 w-full max-w-xs rounded-full bg-gradient-to-r from-indigo-500 to-purple-500"></div>
+          <p className="mt-4 text-sm text-gray-600">Organize your tasks with style</p>
+        </div>
 
         {/* Abas de Navegação */}
         <div className="mb-6 flex items-center justify-center rounded-xl bg-gray-200 p-1">
           <button
             onClick={() => setAuthMode('login')}
-            className={`w-full rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
-              authMode === 'login'
+            className={`w-full rounded-lg px-4 py-2 text-sm font-medium transition-colors ${authMode === 'login'
                 ? 'bg-white text-gray-900 shadow-sm'
                 : 'text-gray-500 hover:bg-gray-300 cursor-pointer'
-            }`}
+              }`}
           >
             Login
           </button>
           <button
             onClick={() => setAuthMode('register')}
-            className={`w-full rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
-              authMode === 'register'
+            className={`w-full rounded-lg px-4 py-2 text-sm font-medium transition-colors ${authMode === 'register'
                 ? 'bg-white text-gray-900 shadow-sm'
                 : 'text-gray-500 hover:bg-gray-300 cursor-pointer'
-            }`}
+              }`}
           >
             Register
           </button>
@@ -372,7 +370,7 @@ const AuthForm = () => {
         </div>
       </div>
     </div>
-    )
+  )
 }
 
 export default AuthForm;
