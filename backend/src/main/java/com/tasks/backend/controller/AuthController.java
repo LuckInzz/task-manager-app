@@ -43,16 +43,33 @@ public class AuthController {
     public ResponseEntity<LoginResponseDTO> loginUser(@Valid @RequestBody LoginRequestDTO loginRequestDTO, HttpServletResponse responseEntity) {
         LoginResponseDTO response = authService.loginUser(loginRequestDTO);
         
+        long maxAge = loginRequestDTO.isRememberMe() ? 7 * 24 * 60 * 60 : -1;
+
         ResponseCookie cookie = ResponseCookie.from("authToken", response.getToken())
                 .httpOnly(true)
                 .secure(false)
                 .path("/")
-                .maxAge(24 * 60 * 60)
+                .maxAge(maxAge)
                 .sameSite("Lax")
                 .build();
                 
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, cookie.toString())
                 .body(response);
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logoutUser() {
+        ResponseCookie cookie = ResponseCookie.from("authToken", "")
+                .httpOnly(true)
+                .secure(false)
+                .path("/")
+                .maxAge(0)
+                .sameSite("Lax")
+                .build();
+                
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, cookie.toString())
+                .build();
     }
 }

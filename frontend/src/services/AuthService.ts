@@ -23,4 +23,8 @@ export const register = async (userData: RegisterRequest): Promise<UserResponse>
 export const getMe = async (): Promise<UserResponse> => {
     const response = await api.get<UserResponse>('/users/me');
     return response.data;
-}
+};
+
+export const logout = async (): Promise<void> => {
+    await api.post('/auth/logout');
+};

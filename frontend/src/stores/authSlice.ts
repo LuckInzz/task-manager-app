@@ -1,6 +1,6 @@
 import { type StateCreator } from 'zustand';
 import type { UserResponse, LoginRequest, RegisterRequest } from '../types/Auth';
-import { login as loginApi, register as registerApi, getMe } from '../services/AuthService';
+import { login as loginApi, register as registerApi, getMe, logout as logoutApi } from '../services/AuthService';
 import { type StoreState } from './useStore';
 
 export interface AuthSlice {
@@ -8,7 +8,7 @@ export interface AuthSlice {
     checkAuth: () => Promise<void>;
     login: (credentials: LoginRequest) => Promise<void>;
     register: (userData: RegisterRequest) => Promise<void>;
-    logout: () => void;
+    logout: () => Promise<void>;
 }
 
 export const createAuthSlice: StateCreator<
@@ -42,7 +42,12 @@ export const createAuthSlice: StateCreator<
         await registerApi(userData);
     },
 
-    logout: () => {
+    logout: async () => {
+        try {
+            await logoutApi();
+        } catch (error) {
+            console.error("Logout error", error);
+        }
         set({ user: null, tasks: [], taskLists: [], error: null });
     },
 });

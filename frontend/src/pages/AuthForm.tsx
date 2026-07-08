@@ -116,6 +116,7 @@ const InputField: React.FC<InputFieldProps> = ({ id, label, type, placeholder, i
 const LoginForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState<{ [key: string]: string }>({});
   const [isLoading, setIsLoading] = useState(false);
   const { login } = useStore();
@@ -125,7 +126,7 @@ const LoginForm = () => {
     setIsLoading(true);
     setError({});
     try {
-      await login({ email, password });
+      await login({ email, password, rememberMe });
       toast.success('Successfully logged in');
     } catch (err) {
       if (axios.isAxiosError(err) && err.response) {
@@ -175,6 +176,19 @@ const LoginForm = () => {
           />
           {error.password && <p className="text-xs text-red-600 mt-1">{error.password}</p>}
         </div>
+        <div className="flex items-center">
+          <input
+            id="remember-me"
+            name="remember-me"
+            type="checkbox"
+            checked={rememberMe}
+            onChange={(e) => setRememberMe(e.target.checked)}
+            className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600 cursor-pointer"
+          />
+          <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900 cursor-pointer">
+            Remember me
+          </label>
+        </div>
         <div>
           {isLoading ?
             <button
@@ -219,6 +233,18 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onRegisterSuccess }) => {
     e.preventDefault();
     setIsLoading(true);
     setError({});
+
+    if (password.length < 6) {
+      setError({ password: 'Password must have at least 6 characters.' });
+      setIsLoading(false);
+      return;
+    }
+    if (!/[A-Z]/.test(password)) {
+      setError({ password: 'Password must contain at least one uppercase letter.' });
+      setIsLoading(false);
+      return;
+    }
+
     try {
       await register({ username, email, password });
       onRegisterSuccess();

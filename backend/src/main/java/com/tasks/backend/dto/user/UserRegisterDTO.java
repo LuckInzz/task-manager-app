@@ -15,6 +15,7 @@ public class UserRegisterDTO {
 
     @NotBlank(message = "Password can not be blank.")
     @Size(min = 6, message = "Password must have a least 6 characters/numbers.")
+    @jakarta.validation.constraints.Pattern(regexp = "^(?=.*[A-Z]).*$", message = "Password must contain at least one uppercase letter.")
     private String password;
 
     public UserRegisterDTO(){}

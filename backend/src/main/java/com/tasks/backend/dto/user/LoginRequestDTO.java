@@ -8,6 +8,8 @@ public class LoginRequestDTO {
     private String email;
     @NotBlank(message = "Password can not be blank.")
     private String password;
+    
+    private boolean rememberMe;
 
     public LoginRequestDTO(){}
 
@@ -25,5 +27,13 @@ public class LoginRequestDTO {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public boolean isRememberMe() {
+        return rememberMe;
+    }
+
+    public void setRememberMe(boolean rememberMe) {
+        this.rememberMe = rememberMe;
     }
 }
